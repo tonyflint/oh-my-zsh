@@ -10,14 +10,10 @@ function git_prompt_info() {
 
 # Checks if working tree is dirty
 parse_git_dirty() {
-  local SUBMODULE_SYNTAX=''
-  local GIT_STATUS=''
-  local CLEAN_MESSAGE='nothing to commit (working directory clean)'
-  if [[ "$(command git config --get oh-my-zsh.hide-dirty)" != "1" ]]; then
   local STATUS=''
   local FLAGS
   FLAGS=('--porcelain')
-  if [[ "$(command git config --get oh-my-zsh.hide-status)" != "1" ]]; then
+  if [[ "$(command git config --get oh-my-zsh.hide-dirty)" != "1" ]]; then
     if [[ $POST_1_7_2_GIT -gt 0 ]]; then
       FLAGS+='--ignore-submodules=dirty'
     fi
@@ -82,7 +78,7 @@ function git_prompt_long_sha() {
 git_prompt_status() {
   INDEX=$(command git status --porcelain -b 2> /dev/null)
   STATUS=""
-  if $(echo "$INDEX" | grep -E '^\?\? ' &> /dev/null); then
+  if $(echo "$INDEX" | command grep -E '^\?\? ' &> /dev/null); then
     STATUS="$ZSH_THEME_GIT_PROMPT_UNTRACKED$STATUS"
   fi
   if $(echo "$INDEX" | grep '^A  ' &> /dev/null); then
@@ -152,5 +148,3 @@ function git_compare_version() {
 POST_1_7_2_GIT=$(git_compare_version "1.7.2")
 #clean up the namespace slightly by removing the checker function
 unset -f git_compare_version
-
-
